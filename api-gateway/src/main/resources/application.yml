@@ -1,0 +1,28 @@
+server:
+  port: 8081  # Aquí defines el puerto del API Gateway
+
+spring:
+  application:
+    name: API-GATEWAY  # Nombre del servicio registrado en Eureka
+
+  cloud:
+    gateway:
+      routes:
+        - id: identity-service
+          uri: lb://IDENTITY-SERVICE
+          predicates:
+            - Path=/auth/**
+          filters:
+          - AuthenticationFilter
+
+        - id: orders
+          uri: lb://ORDERS
+          predicates:
+            - Path=/ordenes/**
+          filters:
+          - AuthenticationFilter
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
